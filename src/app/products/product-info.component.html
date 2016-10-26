@@ -1,0 +1,105 @@
+<div class="row" *ngIf="product">
+  <h2 class="card-title">{{product.title | uppercase}}</h2>
+
+  <div class="col-md-4">
+    <div class="view overlay hm-white-slight">
+      <img [src]="product.img" class="img-fluid" alt="{{product.title}}" />
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <h3>Description</h3>
+    <div class="description">{{product.text}}</div>
+  </div>
+
+  <div class="col-xl-12 text-xs-center">
+    <a class="btn btn-primary" [routerLink]="" fragment="reviewPane">Leave a reply</a>
+  </div>
+</div>
+
+<hr [class.show-progress]="loading">
+
+<div class="row" *ngIf="reviews">
+
+  <div id="reviewPane" class="col-xs-12" *ngIf="product">
+
+    <div class="reply-form" *ngIf="!loggedIn">
+      <h3 class="section-heading">Leave a reply</h3>
+
+      <div class="row">
+        <div class="col-xs-12 text-warning text-xs-center">
+          Please sign in, if You wish to post a reply.
+        </div>
+      </div>
+    </div>
+
+    <div class="reply-form" *ngIf="loggedIn">
+      <h3 class="section-heading">Leave a reply </h3>
+      <div class="row">
+        <form name="form-review" class="md-form" (ngSubmit)="addReview(reviewForm)"  #reviewForm="ngForm">
+
+          <div class="col-sm-4 col-xs-12">
+            <select class="form-control fa" name="rate" ngModel>
+              <option value="1" class="fa" selected="selected">Rate &#xf005;</option>
+              <option value="2" class="fa">Rate &#xf005; &#xf005;</option>
+              <option value="3" class="fa">Rate &#xf005; &#xf005; &#xf005;</option>
+              <option value="4" class="fa">Rate &#xf005; &#xf005; &#xf005; &#xf005;</option>
+              <option value="5" class="fa">Rate &#xf005; &#xf005; &#xf005; &#xf005; &#xf005;</option>
+            </select>
+          </div>
+
+          <div class="col-sm-12 col-xs-12">
+            <textarea type="text" class="md-textarea" name="text" ngModel required></textarea>
+            <label>Your review</label>
+          </div>
+
+          <div class="col-sm-12 col-xs-12">
+            <input type="file"
+                   ngFileSelect
+                   [options]="options"
+                   (onUpload)="handleUpload($event)" />
+
+            <p *ngIf="previewUrl">
+              <img [src]="previewUrl" alt="Preview Data" class="preview-img">
+            </p>
+          </div>
+
+          <div class="col-sm-12 col-xs-12 text-xs-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="section-footer">
+        <div class="options" *ngIf="errorMsg" class="alert alert-danger">{{errorMsg}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12" >
+    <div class="comments-list">
+
+      <div class="section-heading">
+        <h3>Product reviews</h3>
+      </div>
+
+      <div class="row" *ngFor="let review of reviews">
+        <div class="comment-id">{{review.id}}</div>
+        <div class="col-sm-3 col-md-2 hidden-xs-down">
+          <img src="/assets/avatar-1.png">
+        </div>
+        <div class="col-sm-9 col-md-10 col-xs-12">
+          <a href="mailto:{{review.created_by.usermail}}"><h3 class="user-name">{{review.created_by.username}}</h3></a>
+
+          <div class="card-data">
+            <span class="comment-date"><i class="fa fa-clock-o"></i> {{review.created_at | date: 'yyyy-MM-dd'}}</span>
+            <span class="comment-rate"><i class="fa fa-star-{{review.rate}}"></i></span>
+          </div>
+          <p class="comment-text">{{review.text}} <img class="review-img" *ngIf="review.images" [src]="imageURLbase + review.images[0]" /></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

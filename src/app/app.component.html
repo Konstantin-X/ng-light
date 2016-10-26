@@ -1,0 +1,119 @@
+<!-- Modal Signin form -->
+<div class="modal fade modal-ext" id="modal-signin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3><i class="fa fa-lock"></i> Sign in</h3>
+      </div>
+
+      <form name="form-signin" class="modal-body" (ngSubmit)="signIn(signinForm)"  #signinForm="ngForm">
+        <div class="md-form">
+          <i class="fa fa-envelope prefix"></i>
+          <input type="text" class="form-control" name="usermail" ngModel required>
+          <label>Your email</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fa fa-key prefix"></i>
+          <input type="password" class="form-control" name="password" ngModel required>
+          <label>Your password</label>
+        </div>
+        <div class="text-xs-center">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">Sign in</button>
+        </div>
+      </form>
+
+      <div class="modal-footer">
+        <div class="options" *ngIf="errorMsg" class="alert alert-danger">{{errorMsg}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / Modal Signin form -->
+
+<!-- Modal Signup form -->
+<div class="modal fade modal-ext" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3><i class="fa fa-lock"></i> Sign up</h3>
+      </div>
+
+      <form name="form-signin" class="modal-body" (ngSubmit)="signUp(signupForm)"  #signupForm="ngForm">
+        <div class="md-form">
+          <i class="fa fa-envelope prefix"></i>
+          <input type="text" class="form-control" name="usermail" ngModel required>
+          <label>Your email</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fa  fa-user prefix"></i>
+          <input type="text" class="form-control" name="username" ngModel required>
+          <label>Your name</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fa fa-phone prefix"></i>
+          <input type="text" class="form-control" name="userphone" ngModel>
+          <label>Your phone</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fa fa-key prefix"></i>
+          <input type="password" class="form-control" name="password" ngModel required>
+          <label>Your password</label>
+        </div>
+        <div class="text-xs-center">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">Sign Up</button>
+        </div>
+      </form>
+
+      <div class="modal-footer">
+        <div class="options" *ngIf="errorMsg" class="alert alert-danger">{{errorMsg}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / Modal Signup form -->
+
+  <nav class="navbar navbar-dark primary-color-dark navbar-fixed-top">
+    <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseEx">
+      <i class="fa fa-bars"></i>
+    </button>
+
+    <div class="container">
+      <a class="navbar-brand" routerLink="/">{{title}}</a>
+
+      <div class="collapse navbar-toggleable-xs" id="collapseEx">
+
+        <ul class="nav navbar-nav">
+          <li class="nav-item" *ngIf="loggedIn">
+            <a class="nav-link"  (click)="signOut()">[ <i class="fa fa-user prefix"></i>{{authUser.username}} ] Sign Out</a>
+          </li>
+          <li class="nav-item" *ngIf="!loggedIn">
+            <a class="nav-link" (click)="showSignup()">Sign Up</a>
+          </li>
+          <li class="nav-item" *ngIf="!loggedIn">
+            <a class="nav-link" (click)="showSignin()">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/help">Help</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<main>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</main>
