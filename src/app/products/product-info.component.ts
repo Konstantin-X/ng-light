@@ -97,6 +97,7 @@ export class ProductInfoComponent implements OnInit {
     this.reviewService.addReview(newReview)
       .subscribe((result) => {
           this.previewUrl = '';
+          this.reviewImg  = '';
           this.getReviews();
           this.loading = false;
         },
