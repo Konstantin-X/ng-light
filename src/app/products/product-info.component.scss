@@ -1,12 +1,6 @@
-.fa-star-1:before { content: "\f005"; }
-.fa-star-2:before { content: "\f005 \f005"; }
-.fa-star-3:before { content: "\f005 \f005 \f005"; }
-.fa-star-4:before { content: "\f005 \f005 \f005 \f005"; }
-.fa-star-5:before { content: "\f005 \f005 \f005 \f005 \f005"; }
-
 .comments-list .row { position: relative; }
 .comments-list .comment-id {position: absolute; right: 0; top: -0.4em; color: rgba(204, 204, 204, 0.21); font-size: 10em; font-weight: bold;}
 .comments-list .comment-text { border-bottom: 1px solid #ccc; padding-bottom: 1em; }
 .comments-list .review-img {border-radius: 0; margin-top: 0.5em; box-shadow: none; max-width: 100%;}
-
 .reply-form img { border-radius: 0;}
+textarea.md-textarea {min-height: 4rem;}

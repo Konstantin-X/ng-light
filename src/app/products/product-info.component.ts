@@ -4,12 +4,9 @@ import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NavigationEnd, Router }  from '@angular/router';
 
-import { AuthService }            from "../shared/auth.service";
-import { ProductService }         from './product.service';
 import { ReviewService }          from "./review.service";
 
 import { baseURL }                from '../shared/options';
-import { Product }                from './product';
 import { Review }                 from "./review";
 
 @Component({
@@ -19,7 +16,6 @@ import { Review }                 from "./review";
 export class ProductInfoComponent implements OnInit {
   public errorMsg: string;
   public loading:  boolean = false;
-  public loggedIn: boolean = false;
 
   protected uploadURL: string;
   protected imageURLbase: string;
@@ -33,18 +29,14 @@ export class ProductInfoComponent implements OnInit {
 
   private uploadEvents: EventEmitter<any> = new EventEmitter();
 
-  private productId: number;
-  private reviewImg: string;
+  private reviewImg: string = '';
 
-  public product: Product;
   public reviews: Review[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private authService: AuthService,
-    private productService: ProductService,
     private reviewService:  ReviewService
   ) {
 
@@ -53,34 +45,10 @@ export class ProductInfoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.isLoggedIn().subscribe(isLogged => { this.loggedIn = isLogged;});
-    this.authService.updateStatus();
-
-    // get product ID from URL
-    this.route.params.forEach((params: Params) => {
-      this.productId = +params['id']; // evaluate to number
-      this.loading = true;
-      this.productService
-        .getAll()
-        .then(() => {this.getProduct(this.productId);})
-        .then(() => {this.getReviews(this.productId);});
-
-    });
-
-    // on page navigation with "#"
-    this.router.events.subscribe(e => {
-      if (e instanceof NavigationEnd) {
-        let urlTree = this.router.parseUrl(this.router.url);
-        if (urlTree.fragment) {
-          let element = document.querySelector(`#${urlTree.fragment}`);
-          if (element) { element.scrollIntoView({behavior: 'smooth'}); }
-        }
-      }
-    });
+    this.getReviews();
 
     // file upload -->
     this.zone = new NgZone({ enableLongStackTrace: false });
-    let token     = this.authService.getToken();
 
     this.options = {
       url: this.uploadURL
@@ -99,13 +67,10 @@ export class ProductInfoComponent implements OnInit {
     });
   }
 
-  getProduct(id: number) {
-    this.product = this.productService.getById(id);
-  }
-
-  getReviews(id: number) {
+  getReviews() {
+    this.loading = true;
     this.reviewService
-      .getAll(id)
+      .getAll()
       .then(data => {
         this.reviews = data;
         this.loading = false;
@@ -113,26 +78,31 @@ export class ProductInfoComponent implements OnInit {
   }
 
   addReview(form:any) {
+    let newReview = { usermail:  form.value.usermail,
+                      username:  form.value.username,
+                      userphone: form.value.userphone,
+                      text:      form.value.text,
+                      images:    [ this.reviewImg ] };
+
+    let emailRegexp = /^[a-z0-9]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+    if (!emailRegexp.test(newReview.usermail)) {
+      this.errorMsg = 'Error: Incorrect email format';
+      return false;
+    }
+
     this.errorMsg = '';
     this.loading  = true;
 
-    let token     = this.authService.getToken();
-    let newReview = { rate:   form.value.rate,
-                      text:   form.value.text,
-                      images: [ this.reviewImg ] };
-    this.reviewService.addReview(newReview, this.product.id, token)
+    this.reviewService.addReview(newReview)
       .subscribe((result) => {
           this.previewUrl = '';
-          this.getReviews(this.productId);
+          this.getReviews();
           this.loading = false;
         },
         error => {
-          this.errorMsg = 'Error: try it later!';
-          this.loading = false;
+          this.errorMsg = error;
+          this.loading  = false;
         });
-  }
-
-  gotoProducts() {
-    this.location.back();
   }
 }

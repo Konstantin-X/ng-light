@@ -1,56 +1,37 @@
-<div class="row" *ngIf="product">
-  <h2 class="card-title">{{product.title | uppercase}}</h2>
+<div class="row">
+  <div id="reviewPane" class="col-xs-12">
+    <div class="reply-form">
+      <h2 class="section-heading">Leave a comment</h2>
 
-  <div class="col-md-4">
-    <div class="view overlay hm-white-slight">
-      <img [src]="product.img" class="img-fluid" alt="{{product.title}}" />
-    </div>
-  </div>
-
-  <div class="col-md-8">
-    <h3>Description</h3>
-    <div class="description">{{product.text}}</div>
-  </div>
-
-  <div class="col-xl-12 text-xs-center">
-    <a class="btn btn-primary" [routerLink]="" fragment="reviewPane">Leave a reply</a>
-  </div>
-</div>
-
-<hr [class.show-progress]="loading">
-
-<div class="row" *ngIf="reviews">
-
-  <div id="reviewPane" class="col-xs-12" *ngIf="product">
-
-    <div class="reply-form" *ngIf="!loggedIn">
-      <h3 class="section-heading">Leave a reply</h3>
-
-      <div class="row">
-        <div class="col-xs-12 text-warning text-xs-center">
-          Please sign in, if You wish to post a reply.
-        </div>
-      </div>
-    </div>
-
-    <div class="reply-form" *ngIf="loggedIn">
-      <h3 class="section-heading">Leave a reply </h3>
       <div class="row">
         <form name="form-review" class="md-form" (ngSubmit)="addReview(reviewForm)"  #reviewForm="ngForm">
-
-          <div class="col-sm-4 col-xs-12">
-            <select class="form-control fa" name="rate" ngModel>
-              <option value="1" class="fa" selected="selected">Rate &#xf005;</option>
-              <option value="2" class="fa">Rate &#xf005; &#xf005;</option>
-              <option value="3" class="fa">Rate &#xf005; &#xf005; &#xf005;</option>
-              <option value="4" class="fa">Rate &#xf005; &#xf005; &#xf005; &#xf005;</option>
-              <option value="5" class="fa">Rate &#xf005; &#xf005; &#xf005; &#xf005; &#xf005;</option>
-            </select>
+          <div class="col-md-4 col-xs-12">
+            <div class="md-form">
+              <i class="fa fa-envelope prefix"></i>
+              <input type="text" class="form-control" name="usermail" ngModel required>
+              <label>Your email</label>
+            </div>
           </div>
 
-          <div class="col-sm-12 col-xs-12">
+          <div class="col-md-4 col-xs-12">
+            <div class="md-form">
+              <i class="fa  fa-user prefix"></i>
+              <input type="text" class="form-control" name="username" ngModel required>
+              <label>Your name</label>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-xs-12">
+            <div class="md-form">
+              <i class="fa fa-phone prefix"></i>
+              <input type="text" class="form-control" name="userphone" ngModel>
+              <label>Your phone</label>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-xs-12">
             <textarea type="text" class="md-textarea" name="text" ngModel required></textarea>
-            <label>Your review</label>
+            <label>Your comment</label>
           </div>
 
           <div class="col-sm-12 col-xs-12">
@@ -64,7 +45,7 @@
             </p>
           </div>
 
-          <div class="col-sm-12 col-xs-12 text-xs-center">
+          <div class="col-xs-12 text-xs-center">
             <button type="submit" class="btn btn-primary">Submit</button>
 
           </div>
@@ -77,11 +58,13 @@
     </div>
   </div>
 
+  <hr [class.show-progress]="loading">
+
   <div class="col-sm-12" >
     <div class="comments-list">
 
       <div class="section-heading">
-        <h3>Product reviews</h3>
+        <h2>Comments</h2>
       </div>
 
       <div class="row" *ngFor="let review of reviews">
@@ -96,7 +79,7 @@
             <span class="comment-date"><i class="fa fa-clock-o"></i> {{review.created_at | date: 'yyyy-MM-dd'}}</span>
             <span class="comment-rate"><i class="fa fa-star-{{review.rate}}"></i></span>
           </div>
-          <p class="comment-text">{{review.text}} <img class="review-img" *ngIf="review.images" [src]="imageURLbase + review.images[0]" /></p>
+          <p class="comment-text">{{review.text}} <img class="review-img" *ngIf="review.images[0]" [src]="imageURLbase + review.images[0]" /></p>
         </div>
       </div>
     </div>

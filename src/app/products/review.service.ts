@@ -24,8 +24,8 @@ export class ReviewService {
     this.apiURL = baseURL + 'api/';
   }
 
-  getAll(id: number): Promise<Review[]> {
-      return this.http.get(`${this.apiURL}reviews/${id}?format=json`)
+  getAll(): Promise<Review[]> {
+      return this.http.get(`${this.apiURL}reviews/?format=json`)
         .delay(100)  //  emulate slow connection
         .toPromise()
         .then((response) => { let reviews =  response.json() as Review[];
@@ -34,13 +34,12 @@ export class ReviewService {
         .catch(this.handleError);
   }
 
-  addReview(review, productId: number, token: string): Observable<boolean> {
-console.log('token = ' + token);
+  addReview(review): Observable<boolean> {
     let body    = JSON.stringify(review);
-    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': token });
+    let headers = new Headers({ 'Content-Type': 'application/json'});
     let options = new RequestOptions({ headers: headers });
 
-    return this.http.post(this.apiURL + 'reviews/' + productId , body, options)
+    return this.http.post(this.apiURL + 'reviews/', body, options)
       .map((res: Response) => {
         let data = res.json();
         if (data) { // post success
@@ -50,7 +49,6 @@ console.log('token = ' + token);
         }
       })
       .catch(this.handleError);
-
   }
 
   private handleError(error: any) {
